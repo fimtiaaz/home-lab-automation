@@ -1,0 +1,16 @@
+---
+- name: Basic system setup
+  hosts: localhost
+  become: yes
+  tasks:
+    - name: Install EPEL and base tools
+      yum:
+        name:
+          - epel-release
+          - git
+          - curl
+          - vim
+          - wget
+          - unzip
+        state: present
+
