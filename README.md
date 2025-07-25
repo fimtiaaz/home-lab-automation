@@ -27,6 +27,8 @@ home-lab-automation/
 ├── monitoring/
 │   ├── docker-compose.yml      # Deploys Prometheus + Grafana
 │   └── prometheus.yml          # Prometheus scrape config
+```
+
 Phase 1: Monitoring Stack with Docker Compose
 ▶️ Services Deployed
 Prometheus - Time series database for metrics
@@ -38,7 +40,7 @@ Node Exporter - System metrics exporter for Prometheus
 docker-compose.yml
 
 version: '3.8'
-
+```bash
 services:
   prometheus:
     image: prom/prometheus
@@ -53,9 +55,10 @@ services:
     container_name: grafana
     ports:
       - "3000:3000"
+```
 
 prometheus.yml
-
+```bash
 global:
   scrape_interval: 15s
 
@@ -67,6 +70,7 @@ scrape_configs:
   - job_name: 'node'
     static_configs:
       - targets: ['192.168.8.171:9100']
+```
 Phase 2: Ansible Automation
 Playbooks
 setup.yml – Installs base tools and EPEL
@@ -76,15 +80,15 @@ docker.yml – Installs Docker & adds user to docker group
 node_exporter.yml – Downloads, extracts, and configures node_exporter as a systemd service
 
 inventory
-
+```bash
 localhost ansible_connection=local
+```
 ▶️ Run Example
-bash
-Copy
-Edit
+```bash
 ansible-playbook -i inventory setup.yml
 ansible-playbook -i inventory docker.yml
 ansible-playbook -i inventory node_exporter.yml
+```
 
 Phase 3: Backup & Restore System
 Features
@@ -95,7 +99,7 @@ Stores .tar.gz files under backups/archive/
 Logs all activity to backups/logs/
 
 backup.sh
-
+```bash
 #!/bin/bash
 
 DATE=$(date +"%Y-%m-%d_%H-%M")
@@ -115,12 +119,14 @@ if [ $? -eq 0 ]; then
 else
   echo "[$(date)] ❌ Backup failed!" | tee -a "$LOG_FILE"
 fi
+```
 
 Add to Crontab (Daily at 2AM)
 
 crontab -e
+```bash
 0 2 * * * /home/fimtiaz/LinuxProjects/home-lab-automation/backups/backup.sh
-
+```
 Accessing the Monitoring Stack
 Prometheus: http://localhost:9090
 
@@ -138,7 +144,6 @@ Docker & Docker Compose
 Cron
 
 Bash
-
 
 Author
 Fimtiaz — Linux Admin 
