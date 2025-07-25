@@ -1,0 +1,4 @@
+# Ignore backup archives
+backups/archive/*.tar.gz
+backups/logs/*.log
+
